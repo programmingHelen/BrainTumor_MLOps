@@ -1,4 +1,5 @@
-🧠 Brain Tumor Detection System
+## 🧠 Brain Tumor Detection System
+
 📌 Overview
 
 This project implements an end-to-end machine learning system for detecting brain tumors from MRI images.
