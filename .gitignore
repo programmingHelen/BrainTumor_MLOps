@@ -40,6 +40,7 @@ ENV/
 # =============================================================================
 # --- Claude Code (Anthropic CLI) ---
 .claude/
+.CLAUDE/
 .claude-*/
 .claude.json
 .claude.local.json

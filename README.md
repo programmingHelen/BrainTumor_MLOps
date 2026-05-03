@@ -68,7 +68,6 @@ brain-tumor-mlops/
 ├── dvc.yaml
 ├── .pre-commit-config.yaml
 ├── .env.example
-├── CLAUDE.md                 # AI-assistant guidelines
 └── README.md
 ```
 
@@ -113,7 +112,7 @@ cp .env.example .env
 Open `.env` and fill in:
 
 - `WANDB_API_KEY` — get yours at https://wandb.ai/authorize
-- `KAGGLE_USERNAME` + `KAGGLE_KEY` — at https://www.kaggle.com/settings → *Create New API Token*
+
 
 ### 4. Enable pre-commit hooks
 
@@ -135,13 +134,6 @@ uv run dvc init
 uv run dvc remote add -d storage <remote-url>   # e.g. gdrive://..., s3://..., etc.
 ```
 
-### 6. Configure Kaggle (alternative to `.env`)
-
-```bash
-mkdir -p ~/.kaggle
-mv ~/Downloads/kaggle.json ~/.kaggle/
-chmod 600 ~/.kaggle/kaggle.json
-```
 
 ---
 
@@ -212,19 +204,6 @@ uv run python -m brain_tumor_mlops.monitoring.drift_check     # manual drift rep
 - `fix/<short-description>` — bug fixes.
 - `docs/<short-description>` — documentation only.
 
-### Conventional Commits
-
-Format: `type(scope): description`
-
-Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `style`.
-
-```
-feat(models): add ResNet50 transfer learning architecture
-fix(api): handle empty image upload with 422 response
-docs: add monitoring setup to README
-test(data): add tests for patient-level train/val split
-chore(deps): bump pytorch to 2.4.0
-```
 
 ### Pull Requests
 
@@ -236,50 +215,6 @@ chore(deps): bump pytorch to 2.4.0
 
 ---
 
-## Critical Rules
-
-### Data integrity
-
-- **Patient-level splits only.** Never split by image — same patient in train and val = data leakage.
-- **No raw data in Git.** Always use DVC.
-- **No PHI** (protected health information) in commits, logs, or W&B.
-
-### Models
-
-- Models are versioned in **W&B Model Registry**, not Git.
-- Promoting a model to production requires **human validation** (medical context — non-negotiable).
-- Tag production releases with semver: `v1.0.0`, `v1.1.0`, etc.
-
-### Secrets
-
-- Never commit `.env`, API keys, tokens, passwords.
-- `pre-commit` runs `detect-private-key` to catch accidents.
-- If a secret leaks: rotate it immediately, then clean Git history.
-
-### File size
-
-- `pre-commit` blocks files > 500 KB.
-- Large files (data, models, images) → DVC.
-
----
-
-## Medical Metrics
-
-Plain accuracy is misleading. Always report:
-
-- **Sensitivity (recall)** — a false negative = missed tumor, the worst case.
-- **Specificity** — avoid unnecessary false positives.
-- **AUC-ROC** — overall classifier performance.
-- **Confusion matrix** — always include in reports.
-
----
-
-## Documentation for AI Assistants
-
-The `CLAUDE.md` file at the repo root contains detailed guidelines for Claude (and other LLMs):
-code conventions, MLOps rules, Git workflow, critical rules. Any assistant touching the repo should read it first.
-
----
 
 ## Useful Links
 
